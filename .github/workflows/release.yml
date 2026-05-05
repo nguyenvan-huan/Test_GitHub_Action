@@ -27,12 +27,12 @@ jobs:
       
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: pwd
+        run: ll
       
       - name: Run module build orchestration
         run: |
           bash .github/scripts/build_all.sh \
             --config .github/config/module-config.yaml \
-            --workspace ./repos \
-            --output ./release-output
+            --workspace ../../repos \
+            --output ../../release-output
 
