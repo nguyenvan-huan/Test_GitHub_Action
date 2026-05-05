@@ -153,12 +153,14 @@ for ((i=0; i<MODULE_COUNT; i++)); do
   if [[ -n "${OUTPUT_PATH}" ]]; then
     mkdir -p "${COLLECT_DIR}"
     echo "[INFO] Collect output: ${OUTPUT_PATH} -> ${COLLECT_DIR}"
-    cp -r "${OUTPUT_PATH}"/* "${COLLECT_DIR}/"
+    cp -r "${OUTPUT_PATH}" "${COLLECT_DIR}/"
   else
     echo "[WARN] No output_path defined for module ${NAME}"
   fi
 
   echo "[INFO] Module ${NAME} completed"
+
+  cd ../../
 done
 
 echo "============================================================"
