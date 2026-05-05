@@ -30,8 +30,7 @@ jobs:
         run: pwd 
       
       - name: Run module build orchestration
-        run:
-          bash .github/scripts/build_all.sh \
+        run: ./.github/scripts/build_all.sh \
             --config .github/config/module-config.yaml \
             --workspace ../../repos \
             --output ../../release-output
