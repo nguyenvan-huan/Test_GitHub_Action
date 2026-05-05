@@ -36,7 +36,7 @@ modules:
       working_directory: "."
       install_script: "scripts/install.sh"
       build_script: "scripts/build.sh"
-      output_path: "publish/"
+      output_path: "README.md"
       clean_before_build: true
 
     artifact:
