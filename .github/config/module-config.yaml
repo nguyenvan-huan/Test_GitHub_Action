@@ -1,7 +1,7 @@
 version: 1
 
 global:
-  default_ref: "pbr-PRT-MS"
+  default_ref: "main"
   workspace_root: "./repos"
   output_root: "./release-output"
   continue_on_error: false
@@ -15,7 +15,7 @@ modules:
     build:
       type: "build_binary"          # copy_source | build_binary | download_artifact
       working_directory: "."
-      # install_script: "scripts/install.sh"
+      install_script: "scripts/install.sh"
       build_script: "scripts/publish.sh"
       output_path: "publish/"
       clean_before_build: true
@@ -32,9 +32,9 @@ modules:
     ref: "main"
 
     build:
-      type: "copy_source"
+      type: "copy_source"          # copy_source | build_binary | download_artifact
       working_directory: "."
-      # install_script: "scripts/install.sh"
+      install_script: "scripts/install.sh"
       build_script: "scripts/build.sh"
       output_path: "publish/"
       clean_before_build: true
