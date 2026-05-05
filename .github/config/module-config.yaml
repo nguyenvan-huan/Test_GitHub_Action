@@ -21,7 +21,7 @@ modules:
       clean_before_build: true
 
     artifact:
-      collect_to: "01.Module_1/"
+      collect_to: "01.PARETTE_System/01.Module_1/"
       include:
         - "publish/**"
       exclude: []
@@ -40,7 +40,7 @@ modules:
       clean_before_build: true
 
     artifact:
-      collect_to: "02.Module_2/"
+      collect_to: "01.PARETTE_System/02.Module_2/"
       include:
         - "publish/**"
       exclude: []
