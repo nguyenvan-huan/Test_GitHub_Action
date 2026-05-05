@@ -10,6 +10,7 @@ set -euo pipefail
 # -------------------------
 # Arguments
 # -------------------------
+ROOT_DIR="$(pwd)"
 CONFIG_FILE=""
 WORKSPACE_DIR=""
 OUTPUT_DIR=""
@@ -44,6 +45,7 @@ if [[ -z "${CONFIG_FILE}" || -z "${WORKSPACE_DIR}" || -z "${OUTPUT_DIR}" ]]; the
   exit 1
 fi
 
+CONFIG_FILE="$(realpath "${CONFIG_FILE}")"
 if [[ ! -f "${CONFIG_FILE}" ]]; then
   echo "[ERROR] Config file not found: ${CONFIG_FILE}"
   exit 1
@@ -160,7 +162,7 @@ for ((i=0; i<MODULE_COUNT; i++)); do
 
   echo "[INFO] Module ${NAME} completed"
 
-  cd ../../
+  cd "${ROOT_DIR}"
 done
 
 echo "============================================================"
