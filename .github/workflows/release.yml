@@ -25,16 +25,11 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      
+      - name: Run module build orchestration
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          bash scripts/build_all.sh \
+            --config .github/config/module-config.yaml \
+            --workspace ./repos \
+            --output ./release-output
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo $http_proxy
