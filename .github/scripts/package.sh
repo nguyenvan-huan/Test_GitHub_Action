@@ -72,7 +72,8 @@ fi
 # Optional: print tree for debug
 # -------------------------
 echo "[INFO] Release content:"
-find "${INPUT_DIR}" -maxdepth 2 -type d | sed "s|^|  |"
+# find "${INPUT_DIR}" -maxdepth 2 -type d | sed "s|^|  |"
+find "${INPUT_DIR}" | sed "s|^|  |"
 
 # -------------------------
 # Remove old package if exists
@@ -88,11 +89,17 @@ fi
 (
   cd "${INPUT_DIR}"
   echo "[INFO] Creating zip package..."
-  zip -r "${PACKAGE_PATH}" . \
+  zip -r "${PACKAGE_NAME}" . \
     -x "*.git*" \
     -x "__MACOSX*" \
     -x "*.DS_Store"
 )
+
+# -------------------------
+# Move zip to output dir
+# -------------------------
+TMP_ZIP="${INPUT_DIR}/${PACKAGE_NAME}"
+mv "${TMP_ZIP}" "${PACKAGE_PATH}" 
 
 # -------------------------
 # Verify output
