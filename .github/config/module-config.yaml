@@ -17,7 +17,7 @@ modules:
       working_directory: "."
       install_script: "scripts/install.sh"
       build_script: "scripts/publish.sh"
-      output_path: "publish/"
+      output_path: "bin/Release/net8.0/linux-x64/publish/Test"
       clean_before_build: true
 
     artifact:
