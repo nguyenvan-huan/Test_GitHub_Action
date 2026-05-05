@@ -1,0 +1,46 @@
+version: 1
+
+global:
+  default_ref: "pbr-PRT-MS"
+  workspace_root: "./repos"
+  output_root: "./release-output"
+  continue_on_error: false
+
+modules:
+  - name: "01.Module_1"
+    enabled: true
+    repo: "nguyenvan-huan/Module_1"
+    ref: "main"
+
+    build:
+      type: "build_binary"          # copy_source | build_binary | download_artifact
+      working_directory: "."
+      # install_script: "scripts/install.sh"
+      build_script: "scripts/publish.sh"
+      output_path: "publish/"
+      clean_before_build: true
+
+    artifact:
+      collect_to: "01.Module_1/"
+      include:
+        - "publish/**"
+      exclude: []
+
+  - name: "02.Module_2"
+    enabled: true
+    repo: "nguyenvan-huan/Module_2"
+    ref: "main"
+
+    build:
+      type: "copy_source"
+      working_directory: "."
+      # install_script: "scripts/install.sh"
+      build_script: "scripts/build.sh"
+      output_path: "publish/"
+      clean_before_build: true
+
+    artifact:
+      collect_to: "02.Module_2/"
+      include:
+        - "publish/**"
+      exclude: []
