@@ -49,8 +49,8 @@ jobs:
           chmod +x .github/scripts/build_all.sh
           bash .github/scripts/build_all.sh \
             --config .github/config/module-config.yaml \
-            --workspace ../../repos \
-            --output ../../build-output
+            --workspace ${{ github.workspace }}/../../repos \
+            --output ${{ github.workspace }}/../../build-output
 
     
       # --------------------------------------------------
@@ -60,8 +60,8 @@ jobs:
         run: |
           chmod +x .github/scripts/package.sh
           bash .github/scripts/package.sh \
-            --input-dir ../../build-output \
-            --output-dir ../../package-output \
+            --input-dir ${{ github.workspace }}/../../build-output \
+            --output-dir ${{ github.workspace }}/../../package-output \
             --package-name "${PACKAGE_NAME}"
 
       
