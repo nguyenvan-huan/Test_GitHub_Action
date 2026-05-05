@@ -17,22 +17,73 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
+    name: Build & Package Release
+    
     # The type of runner that the job will run on
     runs-on: self-hosted
+    timeout-minutes: 90
+
+    env: 
+      PACKAGE_NAME: 01.PARETTE_System.zip
+      
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      
+      # --------------------------------------------------
+      # 1. Checkout trigger repo
+      # --------------------------------------------------
+      - name: Checkout trigger repository
+        uses: actions/checkout@v4
       
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: pwd 
       
+      # --------------------------------------------------
+      # 2. Run module build orchestration
+      # --------------------------------------------------
       - name: Run module build orchestration
         run: |
+          chmod +x .github/scripts/build_all.sh
           bash .github/scripts/build_all.sh \
             --config .github/config/module-config.yaml \
             --workspace ../../repos \
-            --output ../../release-output
+            --output ../../build-output
+
+    
+      # --------------------------------------------------
+      # 3. Package release
+      # --------------------------------------------------
+      - name: Package release
+        run: |
+          chmod +x .github/scripts/package.sh
+          bash .github/scripts/package.sh \
+            --input-dir ../../build-output \
+            --output-dir ../../package-output \
+            --package-name "${PACKAGE_NAME}"
+
+      
+      # --------------------------------------------------
+      # 4. Upload release artifact
+      # --------------------------------------------------
+      - name: Upload release-package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-package
+          path: |
+            ../../package-output/${PACKAGE_NAME}
+          retention-days: 30
+
+      
+      # --------------------------------------------------
+      # 5. Cleanup workspace (always)
+      # --------------------------------------------------
+      - name: Cleanup workspace
+        if: always()
+        run: |
+          chmod +x .github/scripts/cleanup.sh
+          bash .github/scripts/cleanup.sh
+
 
