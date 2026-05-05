@@ -31,7 +31,7 @@ jobs:
       
       - name: Run module build orchestration
         run: |
-          bash scripts/build_all.sh \
+          bash .github/scripts/build_all.sh \
             --config .github/config/module-config.yaml \
             --workspace ./repos \
             --output ./release-output
