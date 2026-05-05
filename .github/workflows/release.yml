@@ -30,7 +30,7 @@ jobs:
         run: ll
       
       - name: Run module build orchestration
-        run: |
+        run:
           bash .github/scripts/build_all.sh \
             --config .github/config/module-config.yaml \
             --workspace ../../repos \
