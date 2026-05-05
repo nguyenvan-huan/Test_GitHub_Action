@@ -74,7 +74,6 @@ jobs:
           name: release-package
           path: |
             ${{ github.workspace }}/package-output/${PACKAGE_NAME}
-            # ../../package-output/*
           retention-days: 30
 
       
