@@ -61,11 +61,11 @@ for ((i=0; i<MODULE_COUNT; i++)); do
 
   REPO=$(yq ".modules[$i].repo" "${CONFIG_FILE}")
   REF=$(yq ".modules[$i].ref // \"${DEFAULT_REF}\"" "${CONFIG_FILE}")
-
-  BUILD_TYPE=$(yq ".modules[$i].build.type" "${CONFIG_FILE}")
-  WORK_DIR=$(yq ".modules[$i].build.working_directory // \".\"" "${CONFIG_FILE}")
-  INSTALL_SCRIPT=$(yq ".modules[$i].build.install_script // \"\"" "${CONFIG_FILE}")
-  BUILD_SCRIPT=$(yq ".modules[$i].build.build_script // \"\"" "${CONFIG_FILE}")
+  
+  BUILD_TYPE=$(yq -r ".modules[$i].execution.build_type" "${CONFIG_FILE}")
+  WORK_DIR=$(yq -r ".modules[$i].execution.working_directory // \".\"" "${CONFIG_FILE}")
+  INSTALL_SCRIPT=$(yq -r ".modules[$i].execution.install_script // \"\"" "${CONFIG_FILE}")
+  BUILD_SCRIPT=$(yq -r ".modules[$i].execution.build_script // \"\"" "${CONFIG_FILE}")
 
   MODULE_DIR="${WORKSPACE_DIR}/${NAME}"
 
