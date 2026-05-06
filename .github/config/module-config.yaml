@@ -22,9 +22,6 @@ modules:
 
     artifact:
       collect_to: "01.PARETTE_System/01.Module_1/"
-      include:
-        - "publish/**"
-      exclude: []
 
   - name: "02.Module_2"
     enabled: true
@@ -41,6 +38,3 @@ modules:
 
     artifact:
       collect_to: "01.PARETTE_System/02.Module_2/"
-      include:
-        - "publish/**"
-      exclude: []
