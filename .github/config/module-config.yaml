@@ -10,6 +10,7 @@ modules:
     ref: "main"
 
     execution:
+      build_type: "build_binary"          # copy_source | build_binary | download_artifact
       working_directory: "."
       install_script: "scripts/install.sh"
       build_script: "scripts/publish.sh"
@@ -25,6 +26,7 @@ modules:
     ref: "main"
 
     execution:
+      build_type: "copy_source"
       working_directory: "."
       install_script: ""
       build_script: ""
