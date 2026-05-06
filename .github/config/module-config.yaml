@@ -9,14 +9,14 @@ modules:
     repo: "nguyenvan-huan/Module_1"
     ref: "main"
 
-    build:
-      type: "build_binary"   # copy_source | build_binary | download_artifact
+    execution:
       working_directory: "."
       install_script: "scripts/install.sh"
       build_script: "scripts/publish.sh"
-      output_path: "bin/Release/net8.0/linux-x64/publish/Test"
+      module_package_script: "scripts/package.sh"
 
-    artifact:
+    output:
+      package_output_path: ".github/package/"
       collect_to: "01.PARETTE_System/01.Module_1/"
 
   - name: "02.Module_2"
@@ -24,12 +24,12 @@ modules:
     repo: "nguyenvan-huan/Module_2"
     ref: "main"
 
-    build:
-      type: "copy_source"
+    execution:
       working_directory: "."
       install_script: ""
       build_script: ""
-      output_path: "README.md"
+      module_package_script: "scripts/package.sh"
 
-    artifact:
+    output:
+      package_output_path: ".github/package/"
       collect_to: "01.PARETTE_System/02.Module_2/"
