@@ -2,9 +2,6 @@ version: 1
 
 global:
   default_ref: "main"
-  workspace_root: "./repos"
-  output_root: "./release-output"
-  continue_on_error: false
 
 modules:
   - name: "01.Module_1"
@@ -13,12 +10,11 @@ modules:
     ref: "main"
 
     build:
-      type: "build_binary"          # copy_source | build_binary | download_artifact
+      type: "build_binary"   # copy_source | build_binary | download_artifact
       working_directory: "."
       install_script: "scripts/install.sh"
       build_script: "scripts/publish.sh"
       output_path: "bin/Release/net8.0/linux-x64/publish/Test"
-      clean_before_build: true
 
     artifact:
       collect_to: "01.PARETTE_System/01.Module_1/"
@@ -29,12 +25,11 @@ modules:
     ref: "main"
 
     build:
-      type: "copy_source"          # copy_source | build_binary | download_artifact
+      type: "copy_source"
       working_directory: "."
-      install_script: "scripts/install.sh"
-      build_script: "scripts/build.sh"
+      install_script: ""
+      build_script: ""
       output_path: "README.md"
-      clean_before_build: true
 
     artifact:
       collect_to: "01.PARETTE_System/02.Module_2/"
