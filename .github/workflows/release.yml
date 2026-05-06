@@ -63,7 +63,7 @@ jobs:
           chmod +x .github/scripts/package_modules.sh
           bash .github/scripts/package_modules.sh \
           --config .github/config/module-config.yaml \
-          --workspace ./repos
+          --workspace "${WORKSPACE}"
           
           # Package final release
           chmod +x .github/scripts/package_modules.sh
