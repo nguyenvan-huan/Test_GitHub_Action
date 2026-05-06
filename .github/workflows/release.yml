@@ -35,35 +35,35 @@ jobs:
       # --------------------------------------------------
       # 1. Checkout trigger repo
       # --------------------------------------------------
-      # - name: Checkout trigger repository
-      #   uses: actions/checkout@v4
+      - name: Checkout trigger repository
+        uses: actions/checkout@v4
       
       # # Runs a single command using the runners shell
-      # - name: Run a one-line script
-      #   run: pwd 
+      - name: Run a one-line script
+        run: pwd 
       
       # --------------------------------------------------
       # 2. Run module build orchestration
       # --------------------------------------------------
-      # - name: Run module build orchestration
-      #   run: |
-      #     chmod +x .github/scripts/build_all.sh
-      #     bash .github/scripts/build_all.sh \
-      #       --config .github/config/module-config.yaml \
-      #       --workspace ../../repos \
-      #       --output "${BUILD_OUTPUT}"
+      - name: Run module build orchestration
+        run: |
+          chmod +x .github/scripts/build_all.sh
+          bash .github/scripts/build_all.sh \
+            --config .github/config/module-config.yaml \
+            --workspace ../../repos \
+            --output "${BUILD_OUTPUT}"
 
     
       # --------------------------------------------------
       # 3. Package release
       # --------------------------------------------------
-      # - name: Package release
-      #   run: |
-      #     chmod +x .github/scripts/package.sh
-      #     bash .github/scripts/package.sh \
-      #       --input-dir "${BUILD_OUTPUT}" \
-      #       --output-dir "${PACKAGE_OUTPUT}" \
-      #       --package-name "${PACKAGE_NAME}"
+      - name: Package release
+        run: |
+          chmod +x .github/scripts/package.sh
+          bash .github/scripts/package.sh \
+            --input-dir "${BUILD_OUTPUT}" \
+            --output-dir "${PACKAGE_OUTPUT}" \
+            --package-name "${PACKAGE_NAME}"
 
       
       # --------------------------------------------------
@@ -81,10 +81,10 @@ jobs:
       # --------------------------------------------------
       # 5. Cleanup workspace (always)
       # --------------------------------------------------
-      # - name: Cleanup workspace
-      #   if: always()
-      #   run: |
-      #     chmod +x .github/scripts/cleanup.sh
-      #     bash .github/scripts/cleanup.sh "${BUILD_OUTPUT}"
+      - name: Cleanup workspace
+        if: always()
+        run: |
+          chmod +x .github/scripts/cleanup.sh
+          bash .github/scripts/cleanup.sh "${BUILD_OUTPUT}"
 
 
