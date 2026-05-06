@@ -70,7 +70,6 @@ jobs:
           bash .github/scripts/package_modules.sh \
             --config .github/config/module-config.yaml \
             --workspace "${WORKSPACE}" \
-            --output-dir "${PACKAGE_OUTPUT}" \
             --package-name "${PACKAGE_NAME}"
 
       
