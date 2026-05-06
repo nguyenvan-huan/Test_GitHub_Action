@@ -25,6 +25,7 @@ jobs:
 
     env: 
       PACKAGE_NAME: 01.PARETTE_System.zip
+      WORKSPACE: ../../repos
       BUILD_OUTPUT: ${{ github.workspace }}/.github/build-output
       PACKAGE_OUTPUT: ${{ github.workspace }}/.github/package-output
 
@@ -50,8 +51,7 @@ jobs:
           chmod +x .github/scripts/build_all.sh
           bash .github/scripts/build_all.sh \
             --config .github/config/module-config.yaml \
-            --workspace ../../repos \
-            --output "${BUILD_OUTPUT}"
+            --workspace "${WORKSPACE}"
 
     
       # --------------------------------------------------
@@ -61,7 +61,8 @@ jobs:
         run: |
           chmod +x .github/scripts/package.sh
           bash .github/scripts/package.sh \
-            --input-dir "${BUILD_OUTPUT}" \
+            --config .github/config/module-config.yaml \
+            --workspace "${WORKSPACE}" \
             --output-dir "${PACKAGE_OUTPUT}" \
             --package-name "${PACKAGE_NAME}"
 
