@@ -60,8 +60,8 @@ jobs:
       - name: Package release
         run: |
           # Run module packaging orchestration
-          chmod +x scripts/package_modules.sh
-          bash scripts/package_modules.sh \
+          chmod +x .github/scripts/package_modules.sh
+          bash .github/scripts/package_modules.sh \
           --config .github/config/module-config.yaml \
           --workspace ./repos
           
