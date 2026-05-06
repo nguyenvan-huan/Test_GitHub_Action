@@ -57,14 +57,14 @@ jobs:
       # --------------------------------------------------
       # 3. Package release
       # --------------------------------------------------
-      # - name: Package release
-      #   run: |
-      #     chmod +x .github/scripts/package.sh
-      #     bash .github/scripts/package.sh \
-      #       --config .github/config/module-config.yaml \
-      #       --workspace "${WORKSPACE}" \
-      #       --output-dir "${PACKAGE_OUTPUT}" \
-      #       --package-name "${PACKAGE_NAME}"
+      - name: Package release
+        run: |
+          chmod +x .github/scripts/package.sh
+          bash .github/scripts/package.sh \
+            --config .github/config/module-config.yaml \
+            --workspace "${WORKSPACE}" \
+            --output-dir "${PACKAGE_OUTPUT}" \
+            --package-name "${PACKAGE_NAME}"
 
       
       # --------------------------------------------------
