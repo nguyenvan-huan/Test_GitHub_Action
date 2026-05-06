@@ -25,7 +25,7 @@ jobs:
 
     env: 
       PACKAGE_NAME: 01.PARETTE_System.zip
-      BUILD_OUTPUT: .github/build-output
+      BUILD_OUTPUT: ${{ github.workspace }}/.github/build-output
       PACKAGE_OUTPUT: ${{ github.workspace }}/.github/package-output
 
     # Steps represent a sequence of tasks that will be executed as part of the job
