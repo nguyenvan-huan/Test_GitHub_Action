@@ -12,9 +12,9 @@ modules:
     execution:
       build_type: "build_binary"          # copy_source | build_binary | download_artifact
       working_directory: "."
-      install_script: "scripts/install.sh"
-      build_script: "scripts/publish.sh"
-      module_package_script: "scripts/package.sh"
+      install_script: ".github/scripts/install.sh"
+      build_script: ".github/scripts/publish.sh"
+      module_package_script: ".github/scripts/package.sh"
 
     output:
       package_output_path: ".github/package/"
@@ -30,7 +30,7 @@ modules:
       working_directory: "."
       install_script: ""
       build_script: ""
-      module_package_script: "scripts/package.sh"
+      module_package_script: ".github/scripts/package.sh"
 
     output:
       package_output_path: ".github/package/"
