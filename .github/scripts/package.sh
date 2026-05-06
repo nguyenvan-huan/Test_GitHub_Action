@@ -1,23 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# ============================================================
-# package.sh
-# ------------------------------------------------------------
-# Package release-output into final release ZIP
-# ============================================================
-
-INPUT_DIR=""
+CONFIG_FILE=""
+WORKSPACE_DIR=""
 OUTPUT_DIR=""
 PACKAGE_NAME="PARETTE_System.zip"
 
-# -------------------------
-# Parse arguments
-# -------------------------
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --input-dir)
-      INPUT_DIR="$2"
+    --config)
+      CONFIG_FILE="$2"
+      shift 2
+      ;;
+    --workspace)
+      WORKSPACE_DIR="$2"
       shift 2
       ;;
     --output-dir)
@@ -35,81 +31,104 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-# -------------------------
-# Validate input
-# -------------------------
-if [[ -z "${INPUT_DIR}" || -z "${OUTPUT_DIR}" ]]; then
+if [[ -z "${CONFIG_FILE}" || -z "${WORKSPACE_DIR}" || -z "${OUTPUT_DIR}" ]]; then
   echo "[ERROR] Usage:"
-  echo "  package.sh --input-dir <dir> --output-dir <dir> [--package-name name.zip]"
+  echo "  package.sh --config <module-config.yaml> --workspace <workspace_dir> --output-dir <dir> [--package-name name.zip]"
   exit 1
 fi
 
-if [[ ! -d "${INPUT_DIR}" ]]; then
-  echo "[ERROR] Input directory not found: ${INPUT_DIR}"
-  exit 1
-fi
-
-# Ensure output dir exists
+CONFIG_FILE="$(realpath "${CONFIG_FILE}")"
+WORKSPACE_DIR="$(realpath "${WORKSPACE_DIR}")"
 mkdir -p "${OUTPUT_DIR}"
+OUTPUT_DIR="$(realpath "${OUTPUT_DIR}")"
 
-PACKAGE_PATH="${OUTPUT_DIR}/${PACKAGE_NAME}"
+if [[ ! -f "${CONFIG_FILE}" ]]; then
+  echo "[ERROR] Config file not found: ${CONFIG_FILE}"
+  exit 1
+fi
+
+command -v yq >/dev/null 2>&1 || {
+  echo "[ERROR] yq is required but not installed"
+  exit 1
+}
 
 echo "============================================================"
 echo "[INFO] Packaging release"
-echo "[INFO] Input directory : ${INPUT_DIR}"
-echo "[INFO] Output file     : ${PACKAGE_PATH}"
+echo "[INFO] Config file   : ${CONFIG_FILE}"
+echo "[INFO] Workspace dir : ${WORKSPACE_DIR}"
+echo "[INFO] Output dir    : ${OUTPUT_DIR}"
 echo "============================================================"
 
-# -------------------------
-# Sanity check: input not empty
-# -------------------------
-if [[ -z "$(ls -A "${INPUT_DIR}")" ]]; then
-  echo "[ERROR] Input directory is empty: ${INPUT_DIR}"
-  exit 1
-fi
+# Clean previous collected outputs, but keep final zip if exists
+find "${OUTPUT_DIR}" -mindepth 1 -maxdepth 1 ! -name "${PACKAGE_NAME}" -exec rm -rf {} +
 
-# -------------------------
-# Optional: print tree for debug
-# -------------------------
-echo "[INFO] Release content:"
-# find "${INPUT_DIR}" -maxdepth 2 -type d | sed "s|^|  |"
-find "${INPUT_DIR}" | sed "s|^|  |"
+DEFAULT_REF=$(yq '.global.default_ref // "main"' "${CONFIG_FILE}")
+MODULE_COUNT=$(yq '.modules | length' "${CONFIG_FILE}")
 
-# -------------------------
-# Remove old package if exists
-# -------------------------
+for ((i=0; i<MODULE_COUNT; i++)); do
+  NAME=$(yq ".modules[$i].name" "${CONFIG_FILE}")
+  ENABLED=$(yq ".modules[$i].enabled" "${CONFIG_FILE}")
+
+  if [[ "${ENABLED}" != "true" ]]; then
+    continue
+  fi
+
+  WORK_DIR=$(yq ".modules[$i].build.working_directory // \".\"" "${CONFIG_FILE}")
+  OUTPUT_PATH=$(yq ".modules[$i].build.output_path // \"\"" "${CONFIG_FILE}")
+  COLLECT_TO=$(yq ".modules[$i].artifact.collect_to" "${CONFIG_FILE}")
+
+  MODULE_DIR="${WORKSPACE_DIR}/${NAME}"
+  SOURCE_PATH="${MODULE_DIR}/${WORK_DIR}/${OUTPUT_PATH}"
+  TARGET_DIR="${OUTPUT_DIR}/${COLLECT_TO}"
+
+  echo "------------------------------------------------------------"
+  echo "[INFO] Collect module : ${NAME}"
+  echo "[INFO] Source         : ${SOURCE_PATH}"
+  echo "[INFO] Target         : ${TARGET_DIR}"
+  echo "------------------------------------------------------------"
+
+  if [[ ! -e "${SOURCE_PATH}" ]]; then
+    echo "[ERROR] Output path not found for module ${NAME}: ${SOURCE_PATH}"
+    exit 1
+  fi
+
+  mkdir -p "${TARGET_DIR}"
+
+  cp -r "${SOURCE_PATH}" "${TARGET_DIR}/"
+done
+
+PACKAGE_PATH="${OUTPUT_DIR}/${PACKAGE_NAME}"
+
 if [[ -f "${PACKAGE_PATH}" ]]; then
-  echo "[INFO] Remove existing package: ${PACKAGE_PATH}"
   rm -f "${PACKAGE_PATH}"
 fi
 
-# -------------------------
-# Create zip
-# -------------------------
+echo "[INFO] Release content (full tree):"
+if command -v tree >/dev/null 2>&1; then
+  tree "${OUTPUT_DIR}"
+else
+  find "${OUTPUT_DIR}" | sed "s|^|  |"
+fi
+
+TMP_ZIP="${OUTPUT_DIR}/${PACKAGE_NAME}"
+
 (
-  cd "${INPUT_DIR}"
-  echo "[INFO] Creating zip package..."
+  cd "${OUTPUT_DIR}"
+  echo "[INFO] Creating zip package: ${PACKAGE_NAME}"
   zip -r "${PACKAGE_NAME}" . \
     -x "*.git*" \
     -x "__MACOSX*" \
-    -x "*.DS_Store"
+    -x "*.DS_Store" \
+    -x "${PACKAGE_NAME}"
 )
 
-# -------------------------
-# Move zip to output dir
-# -------------------------
-TMP_ZIP="${INPUT_DIR}/${PACKAGE_NAME}"
-mv "${TMP_ZIP}" "${PACKAGE_PATH}" 
-
-# -------------------------
-# Verify output
-# -------------------------
-if [[ ! -f "${PACKAGE_PATH}" ]]; then
+if [[ ! -f "${TMP_ZIP}" ]]; then
   echo "[ERROR] Package was not created"
   exit 1
 fi
 
 echo "============================================================"
 echo "[INFO] Package created successfully"
-echo "[INFO] Size: $(du -h "${PACKAGE_PATH}" | cut -f1)"
+echo "[INFO] Output file : ${TMP_ZIP}"
+echo "[INFO] Size        : $(du -h "${TMP_ZIP}" | cut -f1)"
 echo "============================================================"
